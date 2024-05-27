@@ -11,11 +11,38 @@ const socket = io(WriteNoteServer, {
     withCredentials: !0
 });
 
+const readline = require("readline");
+const { v4, NIL } = require('uuid');
 socket.on("connect", (data) => {
-    socket.emit("logon", (data) => {
-        console.log(data);
+    const logonData = {
+        isConsole: true
+    };
+
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
     });
+
+    rl.question("Username: ", async function(data) {
+        logonData.Username = data;
+        rl.question("Password: ", async function(data){
+            logonData.Password = data;
+            logonData.SessionID = v4();
+            logon();
+        });
+    });
+
+    function logon(){
+        socket.emit("logon", logonData, (success, error) => {
+            console.log(success);
+            console.log(error);
+        });
+    }
+
 });
 
-const timeLoading = (Date.now() - startupDate) / 1000;
-console.log(`${colors.green}${locale.app_loaded}${colors.reset} ${colors.darkGray}(${timeLoading} seconds)${colors.reset}`);
+// const commandInterface = require("./code/commandInterface"); 
+// commandInterface();
+
+const timeLoading = (Date.now() - startupDate);
+console.log(`${colors.green}${locale.app_loaded}${colors.reset} ${colors.darkGray}(${timeLoading} milliseconds)${colors.reset}`);
