@@ -1,0 +1,14 @@
+{
+  "name": "writenote-console-nodejs",
+  "version": "1.0.0",
+  "description": "A console interface for the famous WriteNote",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hypenexy - Midelight",
+  "license": "MIT",
+  "dependencies": {
+    "socket.io-client": "^4.7.5"
+  }
+}
