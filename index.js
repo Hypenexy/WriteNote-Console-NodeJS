@@ -17,6 +17,7 @@ const Writable = require('stream').Writable;
 const { v4, NIL } = require('uuid');
 socket.on("connect", (data) => {
     console.log(colors.green + locale.server_connected + ` ${timer.getTimeElapsed(startupDate)}`);
+    console.log(`\n${colors.purple}WriteNote ${colors.blue}${colors.bold}${locale.account_login}${colors.reset}`);
     const logonData = {
         isConsole: true
     };
@@ -53,17 +54,20 @@ socket.on("connect", (data) => {
         })
         rlPassword.stdoutMuted = true;
         rlPassword.question(`${colors.gray}${locale.password}: ${colors.reset}` , function(data){
+            console.log("\b \b");
             rlPassword.close();
             console.log();
             logonData.Password = data;
             logonData.SessionID = v4();
             logon();
         });
-        rlPassword._writeToOutput = function _writeToOutput(stringToWrite) {
-            if(rlPassword.stdoutMuted)
+        rlPassword._writeToOutput = function _writeToOutput(stringToWrite){
+            if(rlPassword.stdoutMuted){
                 rlPassword.output.write("*");
-            else
-            rlPassword.output.write(stringToWrite);
+            }
+            else{
+                rlPassword.output.write(stringToWrite);
+            }
         };
           
     });
@@ -72,8 +76,14 @@ socket.on("connect", (data) => {
         socket.emit("logon", logonData, (success, error) => {
             console.log(success);
             console.log(error);
-            const commandInterface = require("./code/commandInterface"); 
-            commandInterface(socket);
+            if(success == "success"){
+                console.log(colors.green + locale.user_success + colors.reset);
+                const commandInterface = require("./code/commandInterface"); 
+                commandInterface(socket);
+            }
+            if(error == "Couldn't find account"){
+                console.log(colors.red + locale.credentials_wrong + colors.reset);
+            }
         });
     }
 

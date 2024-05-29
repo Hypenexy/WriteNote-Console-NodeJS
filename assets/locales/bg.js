@@ -9,6 +9,9 @@ const locale = {
     username: "Потребител",
     password: "Парола",
     server_disconnected: "Сървърът се отсвърза",
+    user_success: "Успешно вписване",
+    credentials_wrong: "Данните не съответстват на нито един акаунт",
+    account_login: "Акаунт Логин",
 };
 
 module.exports = locale;
